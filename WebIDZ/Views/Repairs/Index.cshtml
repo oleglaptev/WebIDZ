@@ -1,0 +1,37 @@
+﻿@model IEnumerable<WebIDZ.Models.ViewModels.RepairVM>
+
+@{
+    ViewBag.Title = "Список ремонтов";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">Добавить ремонт</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center">Дата начала</th>
+            <th class="text-center">Дата окончания</th>
+            <th class="text-center">Название оборудования</th>
+            <th class="text-center">Состояние</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">@item.Дата_начала.ToShortDateString()</td>
+                <td class="text-center">@(item.Дата_окончания.HasValue ? item.Дата_окончания.Value.ToShortDateString() : "-")</td>
+                <td>@item.Название_оборудования</td>
+                <td class="text-center">@item.Состояние</td>
+                <td class="text-center">
+                    <a href="@Url.Action("Details", new { id = item.ID_ремонта })" class="btn btn-info">Детали</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

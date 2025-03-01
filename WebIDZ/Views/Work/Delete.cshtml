@@ -1,0 +1,43 @@
+﻿@model WebIDZ.Models.Работа
+@{
+    ViewBag.Title = "Удаление работы";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<h3 class="text-center">Вы уверены, что хотите удалить эту работу?</h3>
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-danger text-white text-center">
+            Подтверждение удаления
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    @Html.DisplayNameFor(model => model.Код_работы):
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Код_работы)
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    @Html.DisplayNameFor(model => model.Наименование_работы):
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Наименование_работы)
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    @Html.DisplayNameFor(model => model.Стоимость_работы):
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Стоимость_работы) ₽
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger mr-2">Удалить</button>
+                <a href="@Url.Action("Index", "Work")" class="btn btn-secondary">Назад к списку</a>
+            }
+        </div>
+    </div>
+</div>

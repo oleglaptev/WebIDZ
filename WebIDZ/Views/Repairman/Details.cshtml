@@ -1,0 +1,50 @@
+﻿@model WebIDZ.Models.Мастер
+@{
+    ViewBag.Title = "Подробная информация";
+}
+<h2>@ViewBag.Title</h2>
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">@Model.Фамилия @Model.Имя @Model.Отчество</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Квалификация)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Квалификация)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Должность)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Должность)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Фамилия)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Фамилия)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Имя)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Имя)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Отчество)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Отчество)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer text-center">
+        <div class="btn-group">
+            @Html.ActionLink("Редактировать", "Edit", new { id = Model.ID_мастера }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Удалить", "Delete", new { id = Model.ID_мастера }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Вернуться к списку", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+</div>

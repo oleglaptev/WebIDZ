@@ -1,0 +1,91 @@
+﻿@model WebIDZ.Models.ViewModels.HardwareVM
+
+@{
+    ViewBag.Title = "Редактировать оборудование";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container mt-4">
+        <div class="card mx-auto" style="max-width: 500px;">
+            <div class="card-header bg-primary text-white text-center">
+                Редактирование оборудования
+            </div>
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID_оборудования)
+
+                <!-- Название -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Название, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Название, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Название, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Дата ввода в эксплуатацию -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Дата_ввода_в_эскплуатацию, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.TextBoxFor(model => model.Дата_ввода_в_эскплуатацию, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessageFor(model => model.Дата_ввода_в_эскплуатацию, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Состояние (только для чтения) -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        <label class="col-form-label fw-bold">Состояние</label>
+                        <p class="form-control-plaintext">
+                            @(Model.Состояние ? "В работе" : "Ремонтируется")
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Тип оборудования -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.Label("Код_типа", "Тип оборудования", htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.DropDownList("Код_типа", (IEnumerable<SelectListItem>)ViewBag.TypeList, "Выберите тип оборудования", new { @class = "form-control" })
+                        @Html.ValidationMessage("Код_типа", "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Местоположение -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.Label("Местоположение", "Местоположение", htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.DropDownList("Местоположение", (IEnumerable<SelectListItem>)ViewBag.LocationList, "Выберите местоположение", new { @class = "form-control" })
+                        @Html.ValidationMessage("Местоположение", "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Инвентарный номер -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Инвентарный_номер, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Инвентарный_номер, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Инвентарный_номер, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Кнопка сохранения -->
+                <div class="form-group row justify-content-center mt-3">
+                    <div class="col-md-10 d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success w-50">Сохранить</button>
+                        @Html.ActionLink("Назад к списку", "Index", null, new { @class = "btn btn-secondary w-50" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

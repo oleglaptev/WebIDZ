@@ -1,0 +1,68 @@
+﻿@model WebIDZ.Models.Оборудование
+@{
+    ViewBag.Title = "Удаление оборудования";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<h3 class="text-center">Вы уверены, что хотите удалить это оборудование?</h3>
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-danger text-white text-center">
+            Подтверждение удаления
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Название:
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Название)
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Дата ввода в эксплуатацию:
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Дата_ввода_в_эскплуатацию.ToShortDateString()
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Местоположение:
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Местоположение)
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Состояние:
+                </dt>
+                <dd class="col-sm-8">
+                    @if (Model.Состояние == true)
+                    {
+                        <span>В работе</span>
+                    }
+                    else
+                    {
+                        <span>В ремонте</span>
+                    }
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Инвентарный номер:
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Инвентарный_номер)
+                </dd>
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Тип оборудования:
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Типы_оборудования.Наименование)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger mr-2">Удалить</button>
+                <a href="@Url.Action("Index", "Hardware")" class="btn btn-secondary">Назад к списку</a>
+            }
+        </div>
+    </div>
+</div>

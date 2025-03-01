@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="84afd4a45b8d48958b067f415a8cb6c4" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="IDZModel.Мастер" Width="1.5" PointX="1.125" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="IDZModel.Оборудование" Width="1.5" PointX="3.125" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IDZModel.Работа" Width="1.5" PointX="5.875" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="IDZModel.Ремонты_и_техобслуживания" Width="2.375" PointX="2.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="IDZModel.Тип_оборудования" Width="2.5" PointX="0.5" PointY="2.125" IsExpanded="true" />
+        <AssociationConnector Association="IDZModel.Ремонтируют" ManuallyRouted="false" />
+        <AssociationConnector Association="IDZModel.Имеет_тип" ManuallyRouted="false" />
+        <AssociationConnector Association="IDZModel.Ремонтируется" ManuallyRouted="false" />
+        <AssociationConnector Association="IDZModel.Работы_Ремонты_и_техобслуживания" ManuallyRouted="false" >
+        </AssociationConnector>
+        <EntityTypeShape EntityType="IDZModel.Пользователи" Width="1.5" PointX="7" PointY="5.375" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

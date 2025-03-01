@@ -1,0 +1,49 @@
+﻿@model WebIDZ.Models.Работа
+@{
+    ViewBag.Title = "Редактировать работу";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container mt-4">
+        <div class="card mx-auto" style="max-width: 500px;">
+            <div class="card-header bg-primary text-white text-center">
+                Редактирование работы
+            </div>
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Код_работы)
+
+                <!-- Наименование работы -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Наименование_работы, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Наименование_работы, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Наименование_работы, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Стоимость работы -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Стоимость_работы, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Стоимость_работы, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Стоимость_работы, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        <button type="submit" class="btn btn-success mr-2 mt-3">Сохранить</button>
+                        @Html.ActionLink("Назад к списку", "Index", null, new { @class = "btn btn-secondary mt-3" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

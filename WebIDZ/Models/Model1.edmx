@@ -1,0 +1,472 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище IDZModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Мастера">
+          <Key>
+            <PropertyRef Name="ID мастера" />
+          </Key>
+          <Property Name="ID мастера" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Квалификация" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Должность" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Фамилия" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Имя" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Отчество" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="Оборудование">
+          <Key>
+            <PropertyRef Name="ID оборудования" />
+          </Key>
+          <Property Name="ID оборудования" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Название" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Дата ввода в эскплуатацию" Type="date" Nullable="false" />
+          <Property Name="Местоположение" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Состояние" Type="bit" Nullable="false" />
+          <Property Name="Код типа" Type="int" Nullable="false" />
+          <Property Name="Инвентарный номер" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "IDZ.dbo.Пользователи" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Пользователи">
+          <Key>
+            <PropertyRef Name="ID пользователя" />
+            <PropertyRef Name="Логин" />
+            <PropertyRef Name="PasswordHash" />
+            <PropertyRef Name="Salt" />
+          </Key>
+          <Property Name="ID пользователя" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Логин" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Salt" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Работы">
+          <Key>
+            <PropertyRef Name="Код работы" />
+          </Key>
+          <Property Name="Код работы" Type="int" Nullable="false" />
+          <Property Name="Наименование работы" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Стоимость работы" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Работы_Ремонты и техобслуживания">
+          <Key>
+            <PropertyRef Name="Код работы" />
+            <PropertyRef Name="ID ремонта" />
+          </Key>
+          <Property Name="Код работы" Type="int" Nullable="false" />
+          <Property Name="ID ремонта" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ремонты и техобслуживания">
+          <Key>
+            <PropertyRef Name="ID ремонта" />
+          </Key>
+          <Property Name="ID ремонта" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Дата начала" Type="date" Nullable="false" />
+          <Property Name="Дата окончания" Type="date" />
+          <Property Name="ID мастера" Type="uniqueidentifier" />
+          <Property Name="ID оборудования" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Типы оборудования">
+          <Key>
+            <PropertyRef Name="Код типа" />
+          </Key>
+          <Property Name="Код типа" Type="int" Nullable="false" />
+          <Property Name="Наименование" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Количество раз обслуживания" Type="int" Nullable="false" />
+          <Property Name="Отрезок времени" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "IDZ.dbo.Журнал Проведенных Ремонтов" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "IDZ.dbo.ЖурналПредстоящихТехобслуживаний" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <Association Name="FK_Работы_Ремонты и техобслуживания_Работы">
+          <End Role="Работы" Type="Self.Работы" Multiplicity="1" />
+          <End Role="Работы_Ремонты и техобслуживания" Type="Self.Работы_Ремонты и техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Работы">
+              <PropertyRef Name="Код работы" />
+            </Principal>
+            <Dependent Role="Работы_Ремонты и техобслуживания">
+              <PropertyRef Name="Код работы" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Работы_Ремонты и техобслуживания_Ремонты и техобслуживания">
+          <End Role="Ремонты и техобслуживания" Type="Self.Ремонты и техобслуживания" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Работы_Ремонты и техобслуживания" Type="Self.Работы_Ремонты и техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ремонты и техобслуживания">
+              <PropertyRef Name="ID ремонта" />
+            </Principal>
+            <Dependent Role="Работы_Ремонты и техобслуживания">
+              <PropertyRef Name="ID ремонта" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Имеет тип">
+          <End Role="Типы оборудования" Type="Self.Типы оборудования" Multiplicity="1" />
+          <End Role="Оборудование" Type="Self.Оборудование" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Типы оборудования">
+              <PropertyRef Name="Код типа" />
+            </Principal>
+            <Dependent Role="Оборудование">
+              <PropertyRef Name="Код типа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Ремонтируется">
+          <End Role="Оборудование" Type="Self.Оборудование" Multiplicity="1" />
+          <End Role="Ремонты и техобслуживания" Type="Self.Ремонты и техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Оборудование">
+              <PropertyRef Name="ID оборудования" />
+            </Principal>
+            <Dependent Role="Ремонты и техобслуживания">
+              <PropertyRef Name="ID оборудования" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Ремонтируют">
+          <End Role="Мастера" Type="Self.Мастера" Multiplicity="0..1" />
+          <End Role="Ремонты и техобслуживания" Type="Self.Ремонты и техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Мастера">
+              <PropertyRef Name="ID мастера" />
+            </Principal>
+            <Dependent Role="Ремонты и техобслуживания">
+              <PropertyRef Name="ID мастера" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ЗапланироватьТехобслуживание" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="КоличествоЛет" Type="int" Mode="In" />
+          <Parameter Name="ID_оборудования" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="ЗаявкаНаРемонт" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Инвентарный_номер" Type="int" Mode="In" />
+          <Parameter Name="Фамилия" Type="nvarchar" Mode="In" />
+          <Parameter Name="Имя" Type="nvarchar" Mode="In" />
+          <Parameter Name="Отчество" Type="nvarchar" Mode="In" />
+          <Parameter Name="Список_работ" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="ОтчетПоРемонту" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Имя" Type="nvarchar" Mode="In" />
+          <Parameter Name="Фамилия" Type="nvarchar" Mode="In" />
+          <Parameter Name="Отчество" Type="nvarchar" Mode="In" />
+          <Parameter Name="ID_оборудования" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Перечень_работ" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище IDZModelContainer">
+          <EntitySet Name="Мастера" EntityType="Self.Мастера" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Оборудование" EntityType="Self.Оборудование" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Работы" EntityType="Self.Работы" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Работы_Ремонты и техобслуживания" EntityType="Self.Работы_Ремонты и техобслуживания" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ремонты и техобслуживания" EntityType="Self.Ремонты и техобслуживания" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Типы оборудования" EntityType="Self.Типы оборудования" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Пользователи" EntityType="Self.Пользователи" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Пользователи].[ID пользователя] AS [ID пользователя], 
+    [Пользователи].[Логин] AS [Логин], 
+    [Пользователи].[PasswordHash] AS [PasswordHash], 
+    [Пользователи].[Salt] AS [Salt]
+    FROM [dbo].[Пользователи] AS [Пользователи]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Работы_Ремонты и техобслуживания_Работы" Association="Self.FK_Работы_Ремонты и техобслуживания_Работы">
+            <End Role="Работы" EntitySet="Работы" />
+            <End Role="Работы_Ремонты и техобслуживания" EntitySet="Работы_Ремонты и техобслуживания" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Работы_Ремонты и техобслуживания_Ремонты и техобслуживания" Association="Self.FK_Работы_Ремонты и техобслуживания_Ремонты и техобслуживания">
+            <End Role="Ремонты и техобслуживания" EntitySet="Ремонты и техобслуживания" />
+            <End Role="Работы_Ремонты и техобслуживания" EntitySet="Работы_Ремонты и техобслуживания" />
+          </AssociationSet>
+          <AssociationSet Name="Имеет тип" Association="Self.Имеет тип">
+            <End Role="Типы оборудования" EntitySet="Типы оборудования" />
+            <End Role="Оборудование" EntitySet="Оборудование" />
+          </AssociationSet>
+          <AssociationSet Name="Ремонтируется" Association="Self.Ремонтируется">
+            <End Role="Оборудование" EntitySet="Оборудование" />
+            <End Role="Ремонты и техобслуживания" EntitySet="Ремонты и техобслуживания" />
+          </AssociationSet>
+          <AssociationSet Name="Ремонтируют" Association="Self.Ремонтируют">
+            <End Role="Мастера" EntitySet="Мастера" />
+            <End Role="Ремонты и техобслуживания" EntitySet="Ремонты и техобслуживания" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IDZModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Мастер">
+          <Key>
+            <PropertyRef Name="ID_мастера" />
+          </Key>
+          <Property Name="ID_мастера" Type="Guid" Nullable="false" />
+          <Property Name="Квалификация" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Должность" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Фамилия" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Ремонты_и_техобслуживания" Relationship="Self.Ремонтируют" FromRole="Мастера" ToRole="Ремонты_и_техобслуживания" />
+        </EntityType>
+        <EntityType Name="Оборудование">
+          <Key>
+            <PropertyRef Name="ID_оборудования" />
+          </Key>
+          <Property Name="ID_оборудования" Type="Guid" Nullable="false" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Дата_ввода_в_эскплуатацию" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Местоположение" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Состояние" Type="Boolean" Nullable="false" />
+          <Property Name="Код_типа" Type="Int32" Nullable="false" />
+          <Property Name="Инвентарный_номер" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Типы_оборудования" Relationship="Self.Имеет_тип" FromRole="Оборудование" ToRole="Типы_оборудования" />
+          <NavigationProperty Name="Ремонты_и_техобслуживания" Relationship="Self.Ремонтируется" FromRole="Оборудование" ToRole="Ремонты_и_техобслуживания" />
+        </EntityType>
+        <EntityType Name="Работа">
+          <Key>
+            <PropertyRef Name="Код_работы" />
+          </Key>
+          <Property Name="Код_работы" Type="Int32" Nullable="false" />
+          <Property Name="Наименование_работы" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Стоимость_работы" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Ремонты_и_техобслуживания" Relationship="Self.Работы_Ремонты_и_техобслуживания" FromRole="Работы" ToRole="Ремонты_и_техобслуживания" />
+        </EntityType>
+        <EntityType Name="Ремонты_и_техобслуживания">
+          <Key>
+            <PropertyRef Name="ID_ремонта" />
+          </Key>
+          <Property Name="ID_ремонта" Type="Guid" Nullable="false" />
+          <Property Name="Дата_начала" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Дата_окончания" Type="DateTime" Precision="0" />
+          <Property Name="ID_мастера" Type="Guid" />
+          <Property Name="ID_оборудования" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Мастера" Relationship="Self.Ремонтируют" FromRole="Ремонты_и_техобслуживания" ToRole="Мастера" />
+          <NavigationProperty Name="Оборудование" Relationship="Self.Ремонтируется" FromRole="Ремонты_и_техобслуживания" ToRole="Оборудование" />
+          <NavigationProperty Name="Работы" Relationship="Self.Работы_Ремонты_и_техобслуживания" FromRole="Ремонты_и_техобслуживания" ToRole="Работы" />
+        </EntityType>
+        <EntityType Name="Тип_оборудования">
+          <Key>
+            <PropertyRef Name="Код_типа" />
+          </Key>
+          <Property Name="Код_типа" Type="Int32" Nullable="false" />
+          <Property Name="Наименование" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Количество_раз_обслуживания" Type="Int32" Nullable="false" />
+          <Property Name="Отрезок_времени" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Оборудование" Relationship="Self.Имеет_тип" FromRole="Типы_оборудования" ToRole="Оборудование" />
+        </EntityType>
+        <Association Name="Ремонтируют">
+          <End Role="Мастера" Type="IDZModel.Мастер" Multiplicity="0..1" />
+          <End Role="Ремонты_и_техобслуживания" Type="Self.Ремонты_и_техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Мастера">
+              <PropertyRef Name="ID_мастера" />
+            </Principal>
+            <Dependent Role="Ремонты_и_техобслуживания">
+              <PropertyRef Name="ID_мастера" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Имеет_тип">
+          <End Role="Типы_оборудования" Type="IDZModel.Тип_оборудования" Multiplicity="1" />
+          <End Role="Оборудование" Type="Self.Оборудование" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Типы_оборудования">
+              <PropertyRef Name="Код_типа" />
+            </Principal>
+            <Dependent Role="Оборудование">
+              <PropertyRef Name="Код_типа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Ремонтируется">
+          <End Role="Оборудование" Type="Self.Оборудование" Multiplicity="1" />
+          <End Role="Ремонты_и_техобслуживания" Type="Self.Ремонты_и_техобслуживания" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Оборудование">
+              <PropertyRef Name="ID_оборудования" />
+            </Principal>
+            <Dependent Role="Ремонты_и_техобслуживания">
+              <PropertyRef Name="ID_оборудования" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Работы_Ремонты_и_техобслуживания">
+          <End Role="Работы" Type="IDZModel.Работа" Multiplicity="*" />
+          <End Role="Ремонты_и_техобслуживания" Type="Self.Ремонты_и_техобслуживания" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="IDZEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Мастер" EntityType="IDZModel.Мастер" />
+          <EntitySet Name="Оборудование" EntityType="Self.Оборудование" />
+          <EntitySet Name="Работа" EntityType="IDZModel.Работа" />
+          <EntitySet Name="Ремонты_и_техобслуживания" EntityType="Self.Ремонты_и_техобслуживания" />
+          <EntitySet Name="Тип_оборудования" EntityType="IDZModel.Тип_оборудования" />
+          <AssociationSet Name="Ремонтируют" Association="Self.Ремонтируют">
+            <End Role="Мастера" EntitySet="Мастер" />
+            <End Role="Ремонты_и_техобслуживания" EntitySet="Ремонты_и_техобслуживания" />
+          </AssociationSet>
+          <AssociationSet Name="Имеет_тип" Association="Self.Имеет_тип">
+            <End Role="Типы_оборудования" EntitySet="Тип_оборудования" />
+            <End Role="Оборудование" EntitySet="Оборудование" />
+          </AssociationSet>
+          <AssociationSet Name="Ремонтируется" Association="Self.Ремонтируется">
+            <End Role="Оборудование" EntitySet="Оборудование" />
+            <End Role="Ремонты_и_техобслуживания" EntitySet="Ремонты_и_техобслуживания" />
+          </AssociationSet>
+          <AssociationSet Name="Работы_Ремонты_и_техобслуживания" Association="Self.Работы_Ремонты_и_техобслуживания">
+            <End Role="Работы" EntitySet="Работа" />
+            <End Role="Ремонты_и_техобслуживания" EntitySet="Ремонты_и_техобслуживания" />
+          </AssociationSet>
+          <FunctionImport Name="ЗапланироватьТехобслуживание" ReturnType="Collection(IDZModel.ЗапланироватьТехобслуживание_Result)">
+            <Parameter Name="КоличествоЛет" Mode="In" Type="Int32" />
+            <Parameter Name="ID_оборудования" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="ЗаявкаНаРемонт">
+            <Parameter Name="Инвентарный_номер" Mode="In" Type="Int32" />
+            <Parameter Name="Фамилия" Mode="In" Type="String" />
+            <Parameter Name="Имя" Mode="In" Type="String" />
+            <Parameter Name="Отчество" Mode="In" Type="String" />
+            <Parameter Name="Список_работ" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ОтчетПоРемонту">
+            <Parameter Name="Имя" Mode="In" Type="String" />
+            <Parameter Name="Фамилия" Mode="In" Type="String" />
+            <Parameter Name="Отчество" Mode="In" Type="String" />
+            <Parameter Name="ID_оборудования" Mode="In" Type="Guid" />
+            <Parameter Name="Перечень_работ" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Пользователи" EntityType="IDZModel.Пользователи" />
+        </EntityContainer>
+        <ComplexType Name="ЗапланироватьТехобслуживание_Result">
+          <Property Type="Int32" Name="Количество_запланированных_техобслуживаний" Nullable="true" />
+          <Property Type="String" Name="Оборудование" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="Пользователи">
+          <Key>
+            <PropertyRef Name="ID_пользователя" />
+            <PropertyRef Name="Логин" />
+            <PropertyRef Name="PasswordHash" />
+            <PropertyRef Name="Salt" />
+          </Key>
+          <Property Name="ID_пользователя" Type="Guid" Nullable="false" />
+          <Property Name="Логин" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Salt" Type="Guid" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище IDZModelContainer" CdmEntityContainer="IDZEntities1">
+          <EntitySetMapping Name="Мастер">
+            <EntityTypeMapping TypeName="IDZModel.Мастер">
+              <MappingFragment StoreEntitySet="Мастера">
+                <ScalarProperty Name="ID_мастера" ColumnName="ID мастера" />
+                <ScalarProperty Name="Квалификация" ColumnName="Квалификация" />
+                <ScalarProperty Name="Должность" ColumnName="Должность" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Оборудование">
+            <EntityTypeMapping TypeName="IDZModel.Оборудование">
+              <MappingFragment StoreEntitySet="Оборудование">
+                <ScalarProperty Name="ID_оборудования" ColumnName="ID оборудования" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Дата_ввода_в_эскплуатацию" ColumnName="Дата ввода в эскплуатацию" />
+                <ScalarProperty Name="Местоположение" ColumnName="Местоположение" />
+                <ScalarProperty Name="Состояние" ColumnName="Состояние" />
+                <ScalarProperty Name="Код_типа" ColumnName="Код типа" />
+                <ScalarProperty Name="Инвентарный_номер" ColumnName="Инвентарный номер" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Работа">
+            <EntityTypeMapping TypeName="IDZModel.Работа">
+              <MappingFragment StoreEntitySet="Работы">
+                <ScalarProperty Name="Код_работы" ColumnName="Код работы" />
+                <ScalarProperty Name="Наименование_работы" ColumnName="Наименование работы" />
+                <ScalarProperty Name="Стоимость_работы" ColumnName="Стоимость работы" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ремонты_и_техобслуживания">
+            <EntityTypeMapping TypeName="IDZModel.Ремонты_и_техобслуживания">
+              <MappingFragment StoreEntitySet="Ремонты и техобслуживания">
+                <ScalarProperty Name="ID_ремонта" ColumnName="ID ремонта" />
+                <ScalarProperty Name="Дата_начала" ColumnName="Дата начала" />
+                <ScalarProperty Name="Дата_окончания" ColumnName="Дата окончания" />
+                <ScalarProperty Name="ID_мастера" ColumnName="ID мастера" />
+                <ScalarProperty Name="ID_оборудования" ColumnName="ID оборудования" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Тип_оборудования">
+            <EntityTypeMapping TypeName="IDZModel.Тип_оборудования">
+              <MappingFragment StoreEntitySet="Типы оборудования">
+                <ScalarProperty Name="Код_типа" ColumnName="Код типа" />
+                <ScalarProperty Name="Наименование" ColumnName="Наименование" />
+                <ScalarProperty Name="Количество_раз_обслуживания" ColumnName="Количество раз обслуживания" />
+                <ScalarProperty Name="Отрезок_времени" ColumnName="Отрезок времени" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Работы_Ремонты_и_техобслуживания" TypeName="IDZModel.Работы_Ремонты_и_техобслуживания" StoreEntitySet="Работы_Ремонты и техобслуживания">
+            <EndProperty Name="Работы">
+              <ScalarProperty Name="Код_работы" ColumnName="Код работы" />
+            </EndProperty>
+            <EndProperty Name="Ремонты_и_техобслуживания">
+              <ScalarProperty Name="ID_ремонта" ColumnName="ID ремонта" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="ЗапланироватьТехобслуживание" FunctionName="Хранилище IDZModel.ЗапланироватьТехобслуживание">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="IDZModel.ЗапланироватьТехобслуживание_Result">
+                <ScalarProperty Name="Количество_запланированных_техобслуживаний" ColumnName="Количество запланированных техобслуживаний" />
+                <ScalarProperty Name="Оборудование" ColumnName="Оборудование" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ЗаявкаНаРемонт" FunctionName="Хранилище IDZModel.ЗаявкаНаРемонт" />
+          <FunctionImportMapping FunctionImportName="ОтчетПоРемонту" FunctionName="Хранилище IDZModel.ОтчетПоРемонту" />
+          <EntitySetMapping Name="Пользователи">
+            <EntityTypeMapping TypeName="IDZModel.Пользователи">
+              <MappingFragment StoreEntitySet="Пользователи">
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Логин" ColumnName="Логин" />
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

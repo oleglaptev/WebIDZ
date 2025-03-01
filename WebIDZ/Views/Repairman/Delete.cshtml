@@ -1,0 +1,58 @@
+﻿@model WebIDZ.Models.Мастер
+
+@{
+    ViewBag.Title = "Удалить мастера";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<h3 class="text-center">Вы уверены, что хотите удалить этого мастера?</h3>
+
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-header bg-danger text-white text-center">
+            Подтверждение удаления
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Квалификация)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Квалификация)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Должность)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Должность)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Фамилия)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Фамилия)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Имя)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Имя)
+                </dd>
+                <dt class="col-sm-4 text-right">
+                    @Html.DisplayNameFor(model => model.Отчество)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Отчество)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger mr-2">Удалить</button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Назад к списку</a>
+            }
+        </div>
+    </div>
+</div>

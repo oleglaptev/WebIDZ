@@ -1,0 +1,59 @@
+﻿@model WebIDZ.Models.ViewModels.HardwareVM
+
+@{
+    ViewBag.Title = "Подробная информация";
+}
+
+<h2>Подробная информация</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">@Model.Название</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Инвентарный_номер)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Инвентарный_номер)
+            </dd>
+            <dt class="col-sm-4">
+                Состояние
+            </dt>
+            <dd class="col-sm-8">
+                @(Model.Состояние ? "В работе" : "Ремонтируется")
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Местоположение)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Местоположение)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Дата_ввода_в_эскплуатацию)
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Дата_ввода_в_эскплуатацию.ToString("dd.MM.yyyy")
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ТипОборудования)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ТипОборудования)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ЧастотаОбслуживания)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ЧастотаОбслуживания)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer text-center">
+        <div class="btn-group">
+            @Html.ActionLink("Редактировать", "Edit", new { id = Model.ID_оборудования }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Удалить", "Delete", new { id = Model.ID_оборудования }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Вернуться к списку", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+</div>

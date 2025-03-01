@@ -1,0 +1,75 @@
+﻿@model WebIDZ.Models.ViewModels.RepairmanVM
+
+@{
+    ViewBag.Title = "Редактировать мастера";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container mt-4">
+        <div class="card mx-auto" style="max-width: 500px;">
+            <div class="card-header bg-primary text-white text-center">
+                Редактирование мастера
+            </div>
+            <div class="card-body">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID_мастера)
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Фамилия, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Фамилия, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Фамилия, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Имя, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Имя, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Имя, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Отчество, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Отчество, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Отчество, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Квалификация, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Квалификация, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Квалификация, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.Должность, htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.EditorFor(model => model.Должность, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Должность, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row justify-content-center">
+                    <div class="col-md-10">
+                        <button type="submit" class="btn btn-success mr-2 mt-3">Сохранить</button>
+                        @Html.ActionLink("Назад к списку", "Index", null, new { @class = "btn btn-secondary mt-3" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

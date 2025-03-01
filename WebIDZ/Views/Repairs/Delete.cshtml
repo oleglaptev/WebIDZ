@@ -1,0 +1,118 @@
+﻿@model WebIDZ.Models.ViewModels.RepairVM
+
+@{
+    ViewBag.Title = "Удаление ремонта";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<h3 class="text-center">Вы уверены, что хотите удалить этот ремонт?</h3>
+
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-danger text-white text-center">
+            Подтверждение удаления
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Дата начала:
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Дата_начала.ToShortDateString()
+                </dd>
+
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Дата окончания:
+                </dt>
+                <dd class="col-sm-8">
+                    @(Model.Дата_окончания.HasValue ? Model.Дата_окончания.Value.ToShortDateString() : "-")
+                </dd>
+
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Состояние:
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Состояние
+                </dd>
+
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Мастер:
+                </dt>
+                <dd class="col-sm-8">
+                    @if (!string.IsNullOrEmpty(Model.ФИО_мастера))
+                    {
+                        @Model.ФИО_мастера
+                    }
+                    else
+                    {
+                        <span>Не назначен</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Оборудование:
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Название_оборудования
+                </dd>
+
+                <dt class="col-sm-4 text-right font-weight-bold">
+                    Инвентарный номер:
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Инвентарный_номер
+                </dd>
+
+                <!-- Список работ -->
+                @if (Model.Работы != null && Model.Работы.Any())
+                {
+                    <dt class="col-sm-4 text-right font-weight-bold">
+                        Работы:
+                    </dt>
+                    <dd class="col-sm-8">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Наименование работы</th>
+                                    <th>Стоимость работы</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var работа in Model.Работы)
+                                {
+                                    <tr>
+                                        <td>@работа.Наименование_работы</td>
+                                        <td>@работа.Стоимость_работы.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Итоговая стоимость:</th>
+                                    <th>@Model.Суммарная_стоимость.ToString("C")</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </dd>
+                }
+                else
+                {
+                    <dt class="col-sm-4 text-right font-weight-bold">
+                        Работы:
+                    </dt>
+                    <dd class="col-sm-8">
+                        Нет выполненных работ.
+                    </dd>
+                }
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger mr-2">Удалить</button>
+                <a href="@Url.Action("Index", "Repairs")" class="btn btn-secondary">Назад к списку</a>
+            }
+        </div>
+    </div>
+</div>

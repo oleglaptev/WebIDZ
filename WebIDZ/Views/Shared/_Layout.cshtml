@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Управление ремонтами оборудования</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- Добавляем стиль для flexbox-макета -->
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Задаем минимальную высоту тела равной высоте viewport */
+            margin: 0; /* Убираем стандартные отступы */
+        }
+
+        .content {
+            flex: 1; /* Занимает всё доступное пространство между navbar и footer */
+        }
+
+        footer {
+            background-color: #343a40; /* Цвет фона подвала */
+            color: white;
+            padding: 1rem 0; /* Отступы внутри подвала */
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <!-- Логотип или название приложения -->
+            @Html.ActionLink("Управление ремонтами оборудования", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            <!-- Кнопка для мобильной версии -->
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Меню навигации -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Ремонты", "Index", "Repairs", new { area = "" }, new { @class = "nav-link text-white" })
+                        </li>
+                        if (User.Identity.Name == "admin")
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Мастера", "Index", "Repairman", new { area = "" }, new { @class = "nav-link text-white" })
+                            </li>
+                        }
+                        <li class="nav-item">
+                            @Html.ActionLink("Оборудование", "Index", "Hardware", new { area = "" }, new { @class = "nav-link text-white" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Виды работ", "Index", "Work", new { area = "" }, new { @class = "nav-link text-white" })
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Logout", "Account")" class="btn btn-danger ms-2">Выйти</a>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-primary ms-2">Войти</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основное содержимое страницы -->
+    <div class="container mt-5 pt-5">
+        @RenderBody()
+    </div>
+
+    <!-- Подвал -->
+    <footer class="bg-dark text-center text-white">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year - Веб-приложение для управления ремонтами оборудования. Создатель - Лаптев О.В.</p>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

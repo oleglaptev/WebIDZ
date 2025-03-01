@@ -1,0 +1,64 @@
+﻿@model IEnumerable<WebIDZ.Models.ViewModels.HardwareVM>
+@{
+    ViewBag.Title = "Список оборудования";
+}
+<h2>@ViewBag.Title</h2>
+<p>
+    @Html.ActionLink("Добавить оборудование", "Create", null, new { @class = "btn btn-success" })
+</p>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Название)
+            </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Инвентарный_номер)
+            </th>
+            <th class="text-center">
+                Состояние
+            </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Местоположение)
+            </th>
+            <th class="text-center">
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Название)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Инвентарный_номер)
+                </td>
+                <td>
+                    @(item.Состояние ? "В работе" : "Ремонтируется")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Местоположение)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink("Подробнее", "Details", new { id = item.ID_оборудования }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrap")
+    <style>
+        .table th {
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        .table .text-center {
+            text-align: center;
+        }
+    </style>
+}

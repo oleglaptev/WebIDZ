@@ -1,0 +1,73 @@
+﻿@model WebIDZ.Models.ViewModels.RepairVM
+
+@{
+    ViewBag.Title = "Детали ремонта";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Ремонт от @Model.Дата_начала.ToShortDateString()  </h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">Дата начала:</dt>
+            <dd class="col-sm-8">@Model.Дата_начала.ToShortDateString()</dd>
+
+            <dt class="col-sm-4">Дата окончания:</dt>
+            <dd class="col-sm-8">@(Model.Дата_окончания.HasValue ? Model.Дата_окончания.Value.ToShortDateString() : "-")</dd>
+
+            <dt class="col-sm-4">Состояние:</dt>
+            <dd class="col-sm-8">@Model.Состояние</dd>
+
+            <dt class="col-sm-4">Мастер:</dt>
+            <dd class="col-sm-8">@(Model.ФИО_мастера?.Split(' ').Length > 1 ? $"{Model.ФИО_мастера.Split(' ')[0]} {Model.ФИО_мастера.Split(' ')[1][0]}. {Model.ФИО_мастера.Split(' ')[2][0]}." : "Не назначен")</dd>
+
+            <dt class="col-sm-4">Оборудование:</dt>
+            <dd class="col-sm-8">@Model.Название_оборудования</dd>
+
+            <dt class="col-sm-4">Инвентарный номер:</dt>
+            <dd class="col-sm-8">@Model.Инвентарный_номер</dd>
+        </dl>
+
+        <!-- Список работ -->
+        @if (Model.Работы != null && Model.Работы.Any())
+        {
+            <h5>Работы:</h5>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Наименование работы</th>
+                        <th>Стоимость работы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var работа in Model.Работы)
+                    {
+                        <tr>
+                            <td>@работа.Наименование_работы</td>
+                            <td>@работа.Стоимость_работы.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Итоговая стоимость:</th>
+                        <th>@Model.Суммарная_стоимость.ToString("C")</th>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+        else
+        {
+            <p>Нет выполненных работ.</p>
+        }
+    </div>
+    <div class="card-footer text-center">
+        <div class="btn-group">
+            @Html.ActionLink("Редактировать", "Edit", new { id = Model.ID_ремонта }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Удалить", "Delete", new { id = Model.ID_ремонта }, new { @class = "btn btn-danger"})
+            @Html.ActionLink("Вернуться к списку", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+</div>
