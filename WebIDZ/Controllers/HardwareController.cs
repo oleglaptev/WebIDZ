@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -162,16 +163,18 @@ namespace WebIDZ.Controllers
                 ЧастотаОбслуживания = equipment.Типы_оборудования?.Отрезок_времени // Заполняем частоту обслуживания
             };
 
+
             // Подготовка списка типов оборудования для выпадающего списка
-            ViewBag.TypeList = db.Тип_оборудования
+            var hardwareTypes = db.Тип_оборудования.Select(o => o.Наименование).Distinct().ToList();
+            ViewBag.TypeList = hardwareTypes
                 .AsEnumerable() // Выгружаем данные в память
                 .Select(t => new SelectListItem
                 {
-                    Value = t.Код_типа.ToString(), // Используем Код_типа как значение
-                    Text = t.Наименование, // Используем Наименование как текст
-                    Selected = equipment.Код_типа == t.Код_типа // Устанавливаем выбранное значение
+                    Value = t ?? "", // Обработка null значений
+                    Text = t ?? "Не указано", // Если тип не указан, отображаем "Не указано"
+                    Selected = equipment.Типы_оборудования.Наименование == t // Устанавливаем выбранное значение
                 }).ToList();
-
+           
             // Подготовка списка местоположений для выпадающего списка
             var locations = db.Оборудование.Select(o => o.Местоположение).Distinct().ToList(); // Получаем уникальные местоположения
             ViewBag.LocationList = locations
@@ -190,16 +193,16 @@ namespace WebIDZ.Controllers
         /// <summary>
         /// Метод для сохранения изменений при редактировании оборудования.
         /// </summary>
-        /// <param name="hardwareVM">Данные оборудования после редактирования.</param>
+        /// <param name="editedHardware">Данные оборудования после редактирования.</param>
         /// <returns>Перенаправление на список оборудования или представление с ошибками.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(HardwareVM hardwareVM)
+        public ActionResult Edit(HardwareVM editedHardware)
         {
             if (ModelState.IsValid)
             {
                 // Находим существующее оборудование по ID
-                var equipment = db.Оборудование.Find(hardwareVM.ID_оборудования);
+                var equipment = db.Оборудование.Find(editedHardware.ID_оборудования);
 
                 if (equipment == null)
                 {
@@ -208,26 +211,58 @@ namespace WebIDZ.Controllers
 
                 // Проверяем уникальность инвентарного номера
                 var existingEquipmentWithSameNumber = db.Оборудование
-                    .FirstOrDefault(e => e.Инвентарный_номер == hardwareVM.Инвентарный_номер && e.ID_оборудования != hardwareVM.ID_оборудования);
+                    .Any(e => e.Инвентарный_номер == editedHardware.Инвентарный_номер && e.ID_оборудования != editedHardware.ID_оборудования);
 
-                if (existingEquipmentWithSameNumber != null)
+                if (existingEquipmentWithSameNumber)
                 {
                     ModelState.AddModelError("Инвентарный_номер", "Этот инвентарный номер уже используется другим оборудованием.");
-                    return View(hardwareVM);
+
+                    // Перезаполняем выпадающие списки
+                    var typesList = db.Тип_оборудования.Select(o => o.Наименование).Distinct().ToList();
+                    ViewBag.TypeList = typesList
+                        .AsEnumerable()
+                        .Select(t => new SelectListItem
+                        {
+                            Value = t ?? "",
+                            Text = t ?? "Не указано",
+                            Selected = t == editedHardware.ТипОборудования
+                        }).ToList();
+
+                    var locationsList = db.Оборудование.Select(o => o.Местоположение).Distinct().ToList();
+                    ViewBag.LocationList = locationsList
+                        .AsEnumerable()
+                        .Select(l => new SelectListItem
+                        {
+                            Value = l ?? "",
+                            Text = l ?? "Не указано",
+                            Selected = l == editedHardware.Местоположение
+                        }).ToList();
+
+                    return View(editedHardware);
                 }
 
                 // Обновляем свойства оборудования
-                equipment.Название = hardwareVM.Название;
-                equipment.Дата_ввода_в_эскплуатацию = hardwareVM.Дата_ввода_в_эскплуатацию;
+                equipment.Название = editedHardware.Название;
+                equipment.Дата_ввода_в_эскплуатацию = editedHardware.Дата_ввода_в_эскплуатацию;
+                equipment.Местоположение = editedHardware.Местоположение;
+                equipment.Инвентарный_номер = editedHardware.Инвентарный_номер;
 
-                // Запрещаем изменение типа оборудования
-                // equipment.Код_типа остается неизменным
+                // Получаем выбранное значение типа оборудования из формы
+                string selectedTypeName = Request.Form["ТипОборудования"]; // Выносим значение в локальную переменную
 
-                // Запрещаем изменение состояния оборудования
-                // equipment.Состояние остается неизменным
+                // Находим тип оборудования по имени
+                var selectedType = db.Тип_оборудования.FirstOrDefault(t => t.Наименование == selectedTypeName); // Используем локальную переменную
 
-                equipment.Местоположение = Request.Form["Местоположение"];
-                equipment.Инвентарный_номер = hardwareVM.Инвентарный_номер;
+                if (selectedType != null)
+                {
+                    equipment.Код_типа = selectedType.Код_типа;
+                }
+                else
+                {
+                    // Если тип оборудования не найден, можно добавить сообщение об ошибке
+                    ModelState.AddModelError("ТипОборудования", "Выбранный тип оборудования не существует.");
+                    return View(editedHardware);
+                }
 
                 // Сохраняем изменения в базе данных
                 db.Entry(equipment).State = EntityState.Modified;
@@ -236,29 +271,28 @@ namespace WebIDZ.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Если модель недействительна, возвращаем представление с ошибками
-            // Создаем выпадающий список для типов оборудования
-            var типыОборудования = db.Тип_оборудования.Select(t => new SelectListItem
-            {
-                Value = t.Код_типа.ToString(),
-                Text = t.Наименование,
-                Selected = t.Код_типа.ToString() == Request.Form["Код_типа"] // Устанавливаем выбранное значение
-            }).ToList();
+            // Если модель недействительна, перезаполняем выпадающие списки
+            var hardwareTypes = db.Тип_оборудования.Select(o => o.Наименование).Distinct().ToList();
+            ViewBag.TypeList = hardwareTypes
+                .AsEnumerable()
+                .Select(t => new SelectListItem
+                {
+                    Value = t ?? "",
+                    Text = t ?? "Не указано",
+                    Selected = t == editedHardware.ТипОборудования
+                }).ToList();
 
-            ViewBag.Код_типа = типыОборудования;
-
-            // Создаем выпадающий список для местоположений
             var locations = db.Оборудование.Select(o => o.Местоположение).Distinct().ToList();
-            var местоположения = locations.Select(l => new SelectListItem
-            {
-                Value = l ?? "",
-                Text = l ?? "Не указано",
-                Selected = l == Request.Form["Местоположение"] // Устанавливаем выбранное значение
-            }).ToList();
+            ViewBag.LocationList = locations
+                .AsEnumerable()
+                .Select(l => new SelectListItem
+                {
+                    Value = l ?? "",
+                    Text = l ?? "Не указано",
+                    Selected = l == editedHardware.Местоположение
+                }).ToList();
 
-            ViewBag.Местоположение = местоположения;
-
-            return View(hardwareVM);
+            return View(editedHardware);
         }
 
         // GET: Hardware/Delete/5

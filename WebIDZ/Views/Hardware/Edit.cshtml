@@ -50,9 +50,9 @@
                 <!-- Тип оборудования -->
                 <div class="form-group row justify-content-center">
                     <div class="col-md-10">
-                        @Html.Label("Код_типа", "Тип оборудования", htmlAttributes: new { @class = "col-form-label fw-bold" })
-                        @Html.DropDownList("Код_типа", (IEnumerable<SelectListItem>)ViewBag.TypeList, "Выберите тип оборудования", new { @class = "form-control" })
-                        @Html.ValidationMessage("Код_типа", "", new { @class = "text-danger" })
+                        @Html.Label("ТипОборудования", "Тип оборудования", htmlAttributes: new { @class = "col-form-label fw-bold" })
+                        @Html.DropDownList("ТипОборудования", (IEnumerable<SelectListItem>)ViewBag.TypeList, "Выберите тип оборудования", new { @class = "form-control" })
+                        @Html.ValidationMessage("ТипОборудования", "", new { @class = "text-danger" })
                     </div>
                 </div>
 

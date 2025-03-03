@@ -14,7 +14,6 @@ namespace WebIDZ.Models
         }
 
         [Key]
-        [Display(Name = "ID оборудования")]
         public System.Guid ID_оборудования { get; set; }
 
         [Required]

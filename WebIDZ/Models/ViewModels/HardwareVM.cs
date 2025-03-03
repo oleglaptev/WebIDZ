@@ -36,7 +36,7 @@ namespace WebIDZ.Models.ViewModels
         public string ЧастотаОбслуживания { get; set; } // Новое свойство для частоты обслуживания
 
         //  свойство для хранения кода типа оборудования
-        [DisplayName("Код типа")]
+        [DisplayName("Тип оборудования")]
         public int Код_типа { get; set; }
     }
 }
